@@ -11,13 +11,18 @@ class CalculationsController < ApplicationController
     # ================================================================================
 
 
-    @word_count = "Replace this string with your answer."
+    text_downcase = @text.downcase
+    text_split_into_array = text_downcase.split
+    @word_count = text_split_into_array.count
 
-    @character_count_with_spaces = "Replace this string with your answer."
+    text_chomp = @text.chomp
+    @character_count_with_spaces = text_chomp.length
 
-    @character_count_without_spaces = "Replace this string with your answer."
+    text_no_whiteSpace = text_chomp.gsub(/\s+/, "")
+    @character_count_without_spaces = text_no_whiteSpace.length
 
-    @occurrences = "Replace this string with your answer."
+    special_word_downcase = @special_word.downcase
+    @occurrences = text_downcase.scan(special_word_downcase).length
 
     # ================================================================================
     # Your code goes above.
@@ -38,7 +43,11 @@ class CalculationsController < ApplicationController
     # The principal value the user input is in the decimal @principal.
     # ================================================================================
 
-    @monthly_payment = "Replace this string with your answer."
+
+    number_payments = @years*12
+    monthly_rate = (@apr/100)/12
+    discount_factor = (((1+monthly_rate) ** number_payments) - 1) / ((monthly_rate) * ((1+monthly_rate) ** number_payments))
+    @monthly_payment = @principal/discount_factor
 
     # ================================================================================
     # Your code goes above.
@@ -60,12 +69,13 @@ class CalculationsController < ApplicationController
     #   number of seconds as a result.
     # ================================================================================
 
-    @seconds = "Replace this string with your answer."
-    @minutes = "Replace this string with your answer."
-    @hours = "Replace this string with your answer."
-    @days = "Replace this string with your answer."
-    @weeks = "Replace this string with your answer."
-    @years = "Replace this string with your answer."
+
+    @seconds = @ending - @starting
+    @minutes = @seconds / 60
+    @hours = @minutes / 60
+    @days = @hours / 24
+    @weeks = @days / 7
+    @years = @weeks / (365/7)
 
     # ================================================================================
     # Your code goes above.
@@ -82,27 +92,42 @@ class CalculationsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer."
 
-    @count = "Replace this string with your answer."
+    @sorted_numbers = @numbers.sort
 
-    @minimum = "Replace this string with your answer."
+    @count = @numbers.count
 
-    @maximum = "Replace this string with your answer."
+    @minimum = @numbers.min
 
-    @range = "Replace this string with your answer."
+    @maximum = @numbers.max
 
-    @median = "Replace this string with your answer."
+    @range = @maximum - @minimum
 
-    @sum = "Replace this string with your answer."
+    @median = (@sorted_numbers[(@numbers.count - 1) / 2] + @sorted_numbers[@count / 2]) / 2.0
 
-    @mean = "Replace this string with your answer."
+    @sum = @numbers.sum
 
-    @variance = "Replace this string with your answer."
+    @mean = @sum/@count
 
-    @standard_deviation = "Replace this string with your answer."
+    all_diff_squared = []
+    @numbers.each do |num|
+      difference_squared = ((num - @mean) ** 2)
+      all_diff_squared.push(difference_squared)
+    end
 
-    @mode = "Replace this string with your answer."
+    sum_of_squares = all_diff_squared.sum
+    @variance = sum_of_squares/@count
+
+    @standard_deviation = Math.sqrt(@variance)
+
+    repeat_hash = Hash.new(0)
+    @numbers.each do |num|
+      repeat_hash [num] += 1
+    end
+      sorted_hash = repeat_hash.sort_by { |number, repeats| - repeats }
+      most_repeat_array = sorted_hash[0]
+
+    @mode = most_repeat_array[0]
 
     # ================================================================================
     # Your code goes above.
